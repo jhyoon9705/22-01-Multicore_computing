@@ -64,7 +64,7 @@ Same as 2-1.
 ### b. Code
 - [ParkingSemaphore.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ParkingSemaphore.java)
 
-___
+<br />
 
 ## 2-3-1. ArrayBlockingQueue and BlockingQueue
 ### a. Descriptions
