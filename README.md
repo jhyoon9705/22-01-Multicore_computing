@@ -7,11 +7,11 @@
 - The source code was compiled(executed) in Eclipse IDE for Enterprise Java and Web Developers – 2021-06
 ___
 
-## 1. Prime number counter with multi-threaded
+## 1-1. Prime number counter with multi-threaded
 ### a. Code
-- pc_static_block.java (static load balancing with block decomposition)
-- pc_static_cyclic.java (static load balancing with cyclic decomposition)
-- pc_dynamic.java (dynamic load balancing)
+- [pc_static_block.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/pc_static_block.java) (static load balancing with block decomposition)
+- [pc_static_cyclic.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/pc_static_cyclic.java) (static load balancing with cyclic decomposition)
+- [pc_dynamic.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/pc_dynamic.java) (dynamic load balancing)
 
 ### b. Execution Result
 ![image](https://user-images.githubusercontent.com/79308015/165342712-f9b8ebec-084a-4d92-a211-095981726cfd.png)
@@ -28,11 +28,11 @@ ___
  
  Overall, it is important to know the number of threads that a program can use rather than increasing the number of threads used in program. In addition, the key point is that tasks are similarly distributed to each thread based on the execution time. 
  
- ___
+ <br />
  
- ## 2. Matrix multiplication with multi-threaded
+ ## 1-2. Matrix multiplication with multi-threaded
  ### a. Code
- - MatmultD.java
+ - [MatmultD.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/MatmultD.java)
 
 ### b. Execution Rsesult
 ![image](https://user-images.githubusercontent.com/79308015/165345561-70d16274-35d5-4b32-8cb4-b4c6e60c534f.png)
@@ -45,3 +45,64 @@ ___
  
  Looking at the execution time graph, it may be seen that the execution time decreases as the number of threads increases. However, the execution time decreases rapidly until six threads are used, but there is no significant change after that. This is because the PC running this program is a 6-core processor.
  
+
+___
+
+## 2-1. Parking garage operation with ArrayBlockingQueue()
+### a. Problem
+Threads mean cars, and shared resources mean parking lots. It is a program that manages the access of cars that want to use a limited parking lot.
+
+### b. Code
+- [ParkingBlockingQueue.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ParkingBlockingQueue.java)
+
+<br />
+
+## 2-2. Parking garage operation with Semaphore()
+### a. Problem
+Same as 2-1.
+
+### b. Code
+- [ParkingSemaphore.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ParkingSemaphore.java)
+
+___
+
+## 2-3-1. ArrayBlockingQueue and BlockingQueue
+### a. Descriptions
+ ArrayBlockingQueue is a BlockingQueue that implemented with an array. The programmer sets the size when setting the queue, so it is fixed and cannot be changed. The key functions of ArrayBlockingQueue are ‘put()’ and ‘take()’. If you want to get items from the queue, you should use ‘take()’. If the queue is empty when getting a item from queue, it will wait until item is added instead of returning ‘null’. On the other side, when want to put an item in a queue, we can use ‘put()’. If the queue is full in that case, it will wait until space is available. That is, wait for some items to be removed from the queue. Also, it can be used without ‘synchronized’ in multiple thread because it guarantees concurrency safety.
+ 
+### b. Example Code
+- [ex1.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ex1.java)
+
+<br />
+
+## 2-3-2. ReadWriteLock
+### a. Descriptions
+ Mutex uses only ‘lock’ and ‘unlock’. However, this can be said to be a slightly inefficient method. For example, if one thread accesses the data protected by the lock to read, the other thread cannot read that data. Since the simple reading does not impair the consistency of the data, synchronization problems don’t occur even if multiple threads read the same data at the same time. On the other hand, ReadWriteLock has ‘readLock’ and ‘writeLock’ additionally. If one thread read some data, that data becomes read-lock state. In this case, the other threads can read that data simultaneously but cannot write. However, if one thread is writing some data, all requests(read or write) are blocked.
+ 
+### b. Example Code
+- [ex2.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ex2.java)
+
+<br />
+
+## 2-3-3. AtomicInteger
+### a. Descriptions
+ ‘AtomicInteger’ means integer that atomicity. It guarantees concurrency safety without using ‘synchronized’ keyword or ‘lock’ when modifying(or reading) the same integer variable in multithread environment. That is, it is safe from threads accssing the variable at the same time. If you want to modify or read integer value, you should use ‘set(int)’ or ‘get()’ respectively. There are many methods that can modify(or read) such as ‘getAndAdd(n)’, ‘addAndGet(n)’, ‘incrementAndGet()’, ‘getAndIncrement()’, and so on. For example, ‘getAndAdd(n)’ returns the current integer value and adds newValue(n) to the current value. 
+
+ 
+### b. Example Code
+- [ex3.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ex3.java)
+
+<br />
+
+## 2-3-3. CyclicBarrier
+### a. Descriptions
+ ‘CyclicBarrier’ makes it wait at a desired point inside the runnig thread. And if the program call ‘await()’ as much as the value that passes as a parameter to the constructor, the program can release the waiting of all waiting threads.
+
+ 
+### b. Example Code
+- [ex4.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ex4.java)
+
+
+
+
+
