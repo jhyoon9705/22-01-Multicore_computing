@@ -13,7 +13,7 @@ ___
 - [pc_static_cyclic.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/pc_static_cyclic.java) (static load balancing with cyclic decomposition)
 - [pc_dynamic.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/pc_dynamic.java) (dynamic load balancing)
 
-### b. Execution Result
+### b. Execution result
 ![image](https://user-images.githubusercontent.com/79308015/165342712-f9b8ebec-084a-4d92-a211-095981726cfd.png)
 ![image](https://user-images.githubusercontent.com/79308015/165345763-bdbf9716-e95c-4fe9-9128-dc5de643ee38.png)
 
@@ -34,7 +34,7 @@ ___
  ### a. Code
  - [MatmultD.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/MatmultD.java)
 
-### b. Execution Rsesult
+### b. Execution result
 ![image](https://user-images.githubusercontent.com/79308015/165345561-70d16274-35d5-4b32-8cb4-b4c6e60c534f.png)
 ![image](https://user-images.githubusercontent.com/79308015/165345903-645040c9-f825-417b-ab6e-5e6f0524e84a.png)
 
@@ -103,6 +103,64 @@ Same as 2-1.
 - [ex4.java](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ex4.java)
 
 
+___
 
+## 3-1. Prime number counter using OpenMP
+### a. Code
+- [ompPrimeCounter.c](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ompPrimeCounter.c)
 
+### b. Execution result
+![image](https://user-images.githubusercontent.com/79308015/169676184-2fa90250-17f9-41d1-a224-db0918d2a605.png)
 
+<br />
+
+![image](https://user-images.githubusercontent.com/79308015/169676187-b41b3ca5-2d5a-467e-ae34-c999ffa654f9.png)
+
+### c. Descriptions
+ Looking at the graph and the table above, it can be seen that in all 4 cases(static_default, dynamic_default, static_10, dynamic_10), it decreases rapidly until 6 threads are used, but after that, gently or there is no change. The reason is that the CPU of the computer running the program has 6 cores and 6 threads. <br />
+ Let’s look at the case where the number of threads is the same in 4 cases. In order of best performance, they are dynamic_10 >= dynamic_default > static_10 > static_default. First of all, dynamic load balancing is more faster than static load balancing. This is because dynamic load balancing has less idel time than static because dynamic receives another task immediately after completing the given task. Second, performance is generally good when chunk size is 10, and the difference by chunk size is large in static. To understand this, we have to know the role of the chunk size. When we use chunk size in openMP pragma, it distributes tasks to threads by chunk size. Also, default chunk size is the number of tasks divided by the number of threads. So when calculate the number of prime number, small chunk size in static load balancing makes faster. This is because prime numbers are not evenly distributed over the entire range(1~200000), and the larger the number, the longer it takes to determine whether it is a prime number or not.
+
+<br />
+
+## 3-2. PI calculation using OpenMP
+### a. Code
+- [ompPiCalculator.c](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/ompPiCalculator.c)
+
+### b. Execution result
+![image](https://user-images.githubusercontent.com/79308015/169676345-84a65bc6-595f-45db-a7d4-3e47ae84dba1.png)
+
+<br/>
+
+- **Static load balancing**
+
+![image](https://user-images.githubusercontent.com/79308015/169676357-dc729b5c-5e98-44d4-ac36-1a10265f1bd6.png)
+![image](https://user-images.githubusercontent.com/79308015/169676361-dc25a0bc-a334-4a09-a51c-8e63e94883c6.png)
+
+<br />
+
+- **Dynamic load balancing**
+
+![image](https://user-images.githubusercontent.com/79308015/169676398-1ccab515-bb28-415d-bbbb-5a04ddb79db5.png)
+![image](https://user-images.githubusercontent.com/79308015/169676400-00fda334-977b-4bf3-a55b-61ae2ba75acd.png)
+
+<br />
+
+- **Guided load balancing**
+
+![image](https://user-images.githubusercontent.com/79308015/169676404-02ce6b69-2d0a-4ad0-abae-f96915f55d55.png)
+![image](https://user-images.githubusercontent.com/79308015/169676405-d2ac8b16-306d-477c-a809-6c677543f16b.png)
+
+<br />
+
+### c. Descriptions
+ Static load balancing is the way that the number of iterations of the loop is divided by the number of threads, and the number of chunks is sequentially executed. Dynamic load balancing is a method of queueing tasks divided by chunk size so that whenever threads finish a task, it takes the next task. Guided load balancing is similar to dynamic, but it starts with a large chunk size and gradually decreases the chunk size. <br/>
+ First of all, when we see the static and guided load balancing graph above, it can be seen that chunk size does not have a large effect. Of course, since the running computer uses 6 cores, the execution time decreases until 6 threads are used, but there is little change after that. In case of static load balancing, even if the chunk size is different, the amount of work perfomed by each thread in the end is almost the same, so there is little performace(execution time) difference. Guided load balancing is also similar to the reason for static, and since the performance of each thread will be similar, there is little performance difference due to chunk size. However, in the case of dynamic, it shows a different aspect. When chunk size is 1, the performace improvement of parallel execution is not obtained. Predicting the reason, since tasks are not assigned to each thread at once, context switching between threads occurs very frequently, resulting in performance loss. When the graph is redrawn except when the chunk size is 1, it is as follows.
+ 
+![image](https://user-images.githubusercontent.com/79308015/169676425-65491045-daa5-41b9-8a85-7506b6b59c34.png)
+
+As the chunk size is increases, the overhead caused by context switching decreases, and it can be seen that the performance is improved by the number of threads. <br />
+ Finally, let’s look at the difference in execution time for each scheduling method(static, dynamic, guided) when the chunk size is 100. A graph to verify that is below.
+ 
+![image](https://user-images.githubusercontent.com/79308015/169676435-94a7aff6-4dc1-4f36-8ee2-ffacdb844560.png)
+
+We can see a decreasing trend until 6 threads are used. As mentioned above, this is because the running computer is using 6 cores and 6 threads CPU. Guided load balancing has the best performance because it is a method that combines the advantages of static and dynamic load balancing. Comparing static and dynamic, dynamic uses more resources because it has to manage tasks and distribute them to threads even during execution. Therefore, in PI calculation where the difference in the amount of work of each task is not large and there is little difference in performance per thread, it shows poor performance compared to static load balancing.
