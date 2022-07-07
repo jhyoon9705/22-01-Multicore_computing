@@ -164,3 +164,92 @@ As the chunk size is increases, the overhead caused by context switching decreas
 ![image](https://user-images.githubusercontent.com/79308015/169676435-94a7aff6-4dc1-4f36-8ee2-ffacdb844560.png)
 
 We can see a decreasing trend until 6 threads are used. As mentioned above, this is because the running computer is using 6 cores and 6 threads CPU. Guided load balancing has the best performance because it is a method that combines the advantages of static and dynamic load balancing. Comparing static and dynamic, dynamic uses more resources because it has to manage tasks and distribute them to threads even during execution. Therefore, in PI calculation where the difference in the amount of work of each task is not large and there is little difference in performance per thread, it shows poor performance compared to static load balancing.
+
+
+<br />
+
+## 4-1. OpenMP version of Ray-tracing
+### a. Execution environment
+- OS: Microsoft Windows 10 Education
+- CPU: AMD Ryzen 5 3500X 6-Core Processor, 3593Mhz, 6 Cores, 6 Processors
+- RAM: 16GB
+
+### b. Compile method
+- Using cygwin(windows) gcc compiler with –fopenmp option
+- e.g. “gcc –fopenmp openmp_ray.c”
+
+### c. Execution method
+ After compile, we can get ‘a.exe’ file in project repository. So, we have to execution with a number that configures the number of threads like ‘./a.exe 8’ (if you want to execute this program with 8 threads). Then the result file(result.ppm) will be created.
+ 
+### d. Code
+- [openmp_ray.c](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/openmp_ray.c)
+
+### e. Program output results
+- **part of the result file (result.ppm)**
+
+![image](https://user-images.githubusercontent.com/79308015/177731652-fbf65bb1-a8c6-495c-b9a9-101734233c06.png)
+
+- **sample result picture**
+
+![image](https://user-images.githubusercontent.com/79308015/177731746-1ea0c42f-9d1d-4180-9422-0895842d91ff.png)
+
+### f. Experimental results
+![image](https://user-images.githubusercontent.com/79308015/177732002-117db260-ce5a-4529-a61b-1b95e66b7357.png)
+![image](https://user-images.githubusercontent.com/79308015/177732028-043c6745-cb7f-4f6c-a01a-b05a4e29406b.png)
+
+ When we look at the graph above that shows execution time of Ray-tracing program with openMP, as the number of threads increases, the execution time tends to decrease. However, if more than 6 threads are used, the execution time is almost the same. It can be assumed that this is because the computer running this program has 6 cores.
+ 
+<br />
+
+## 4-2. CUDA version of Ray-tracing
+### a. Execution environment
+- Google colaboratory with GPU runtime
+
+### b. Compile method
+- Compile with nvcc in google colab
+- e.g. “!nvcc cuda_ray.cu”
+
+### c. Execution method
+ After compile, we can get ‘a.out’ file in that repository. So, we can execute this file like “!./a.out”. Then the result file(result.ppm) will be created.
+
+### d. Code
+- [cuda_ray.cu](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/cuda_ray.cu)
+
+### e. Program output results
+- part of the result file (result.ppm)
+
+![image](https://user-images.githubusercontent.com/79308015/177732491-15d8e0f4-a38f-44de-8256-9b07cf8ebb91.png)
+
+- sample result picture
+
+![image](https://user-images.githubusercontent.com/79308015/177732539-bb918362-c66d-4235-b5b7-50e24725537b.png)
+
+### f. Experimental results
+![image](https://user-images.githubusercontent.com/79308015/177732643-34af3326-9fa0-49cd-aebe-fdf18f0a45e2.png)
+
+ We can see that it is faster when using CUDA than when using openMP. This is because CUDA uses much more threads than openmp. In the case of openMP, only the number of cores the PC has can be used.  However, CUDA can be use a much larger number of threads for program execution by using the GPU. Comparing the performance of openmp and cuda through the graph is as follows.
+ 
+![image](https://user-images.githubusercontent.com/79308015/177732674-89411f48-18f9-4f28-9af1-5626ea13a139.png)
+
+<br />
+
+## 4-3. PI calculation with thrust library
+### a. Code
+- [thrust_ex.cu](https://github.com/jhyoon9705/22-01-Multicore_computing/blob/main/thrust_ex.cu)
+
+### b-1. Execution result of "thrust_ex.cu"
+
+![image](https://user-images.githubusercontent.com/79308015/177733229-75ba1463-9f4e-4905-afae-667b37a8b924.png)
+
+### b-2. Execution result of "omp_pi_serial.c"
+
+![image](https://user-images.githubusercontent.com/79308015/177733384-674c2a1e-8a6c-44c3-af92-cb76ebea62e4.png)
+
+### c. Explanation
+ Executing “thrust_ex.cu”, which uses GPU, is significantly faster than when esecution ‘omp_pi_serial.c“ that uses only the CPU. The reason is that using thrust library, tasks are parallelized with many threads using GPU. Looking at the results, it is about 2.6 times faster when using thrust.
+
+
+
+ 
+
+
